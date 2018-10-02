@@ -1,0 +1,153 @@
+li {
+    background: none !important;
+}
+
+ul, ol {
+    list-style: initial !important;
+}
+
+hr {
+    max-width: none !important;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font: 16px Arial;
+}
+
+.ui-menu-item-wrapper {
+  font:  16px "Noticia Text", serif;
+}
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+
+.ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
+
+input {
+  border: 1px solid transparent;
+  background-color: #deebf7;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+input[type=text] {
+  background-color: #2171b5;
+  border-radius: 5px;
+  color: white;
+  width: 90%;
+}
+
+input[type=submit] {
+  background-color: #2171b5;
+  border-radius: 5px;
+  color: white;
+  color: #fff;
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #2171b5;
+  border-radius: 5px;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #2171b5;
+  border-radius: 5px;
+}
+
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #2171b5;
+  color: white;
+}
+
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+#obec, #strany {
+  padding-bottom: 30px;
+}
+
+.stranaKlik {
+  cursor: pointer;
+  color: #08519c;
+  font: 12px "Noticia Text",serif;
+  float: right;
+  margin-bottom: 0;
+}
+
+button {
+  background-color: #2171b5; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font: 16px "Noticia Text",serif;
+  border-radius: 5px;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: white;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: white;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: white;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: white;
+}
+
+#zpetStrany {
+  margin-top: 20px;
+}
+
+#percent {
+  width: 20px;
+}
+
+#uber {
+  background-color: #99000d;
+}
+
+#unter {
+  background-color: #ef3b2c;
+}
+
+#klikaci {
+  background-color: #008000;
+}
+
+.mandaty {
+  background-color: #2171b5; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font: 16px "Noticia Text",serif;
+  border-radius: 5px;
+}
