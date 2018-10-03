@@ -32,11 +32,10 @@ function hledatko(data) {
     delay: 500,
     source: function(request, response){
       var result = obceHledatko.filter(function(obec) {
-        //console.log(obec[1], request.term);
         return obec[1].toLowerCase().includes(request.term.toLowerCase());
       });
       response(result.map(function(obec){return obec[0];}));
-    },//seznamObci,
+    },
     select: function(e) {
       document.getElementById("strany").innerHTML = 'Načítám data...'
       setTimeout(function() {
@@ -98,7 +97,12 @@ function ukazStrany(zvolenaObec, idObce) {
             { targets: [3, 4], orderable: false}
           ],
           "order": [[ 0, "asc" ]],
-          "responsive": true,
+          responsive: {
+              details: {
+                  display: $.fn.dataTable.Responsive.display.childRowImmediate,
+                  type: ''
+              }
+          },
           "ordering": true,
           "paging": false,
           "bInfo": false,
@@ -110,22 +114,19 @@ function ukazStrany(zvolenaObec, idObce) {
 	};
 };
 
-function prepocitejProcenta(pocetStran) {
-
+function prepocitejProcenta() {
   var rozdelenoHlasu = 0;
 
-  for(i = 0; i < pocetStran; i++) {
-
-    var vysledek = parseInt(document.getElementsByClassName("vysledek")[i].value);
+  $(".vysledek").each(function() {
+    var vysledek = parseInt(this.value);
     if (isNaN(vysledek)) {
       vysledek = 0;
     }
     rozdelenoHlasu = rozdelenoHlasu + vysledek;
-
-  }
+  })
 
   if (rozdelenoHlasu == 100) {
-    var html = '<button type="button" id="klikaci" onclick ="spocitejMandaty(' + pocetStran + ')">Spočítat mandáty</button></div>'
+    var html = '<button type="button" id="klikaci" onclick ="spocitejMandaty()">Spočítat mandáty</button></div>'
   } else if (rozdelenoHlasu > 100) {
     var html = '<button type="button" id="uber">Pro rozdělení mandátů je potřeba rozdat o ' + (rozdelenoHlasu - 100) + ' % hlasů méně</button></div>'
   } else {
@@ -136,8 +137,8 @@ function prepocitejProcenta(pocetStran) {
 
 }
 
-function spocitejMandaty(pocetStran) {
-
+function spocitejMandaty() {
+  var pocetStran = $(".nazevStrany").length
   var strany = [];
   var pocetKand = [];
   var pocetMand;
@@ -146,17 +147,23 @@ function spocitejMandaty(pocetStran) {
   var prah = 5;
   var prepocet = new Array(pocetStran);
   var mandaty = [];
+  var mobil = false;
 
   // vstupy pro výpočet
-  for(i = 0; i < pocetStran; i++) {
-    strany.push(document.getElementsByClassName("nazevStrany")[i].textContent);
-    pocetKand.push(document.getElementsByClassName("pocetKand")[i].textContent);
-    pocetMand = parseInt(pocetKand[0].substr(pocetKand[0].indexOf('/') + 1, pocetKand[0].length + 1));
-    procenta.push(parseInt(document.getElementsByClassName("vysledek")[i].value));
-    mandaty.push(0);
+  $(".nazevStrany").each(function(){strany.push($(this).text())})
+  $(".pocetKand").each(function(){pocetKand.push($(this).text())});
+
+  pocetMand = parseInt(pocetKand[0].substr(pocetKand[0].indexOf('/') + 1, pocetKand[0].length + 1));
+  $(".vysledek").each(function(){procenta.push($(this).val())});
+
+  // mobilní hack pt. 1
+  if (procenta.length === pocetStran*2) {
+    mobil = true;
+    procenta = procenta.filter(function(procento, index) {return index % 2});
   }
 
   for(i = 0; i < pocetStran; i++) {
+    mandaty.push(0);
     pocetKand[i] = parseInt(pocetKand[i].substr(0, pocetKand[i].indexOf('/')));
   }
 
@@ -236,8 +243,15 @@ function spocitejMandaty(pocetStran) {
     }
   }
 
-  for(i = 0; i < pocetStran; i++) {
-    document.getElementsByClassName("mandaty")[i].textContent = mandaty[i];
+  // mobilni hack pt. 2
+  if (!mobil) {
+    for(i = 0; i < pocetStran; i++) {
+      document.getElementsByClassName("mandaty")[i].textContent = mandaty[i];
+    }
+  } else {
+        for(i = 0; i < pocetStran; i++) {
+        document.getElementsByClassName("mandaty")[(i*2)+1].textContent = mandaty[i];
+    }
   }
 
 }
@@ -267,7 +281,7 @@ function poskladejTabulkuStran(seznamStran, idStran, idObce) {
       }
 
       if (colIndex == columns.length - 2) {
-        cellValue = '<form onsubmit="return false"><div class="autocomplete" id="percent"><input oninput="prepocitejProcenta(' + seznamStran.length + ')" class="vysledek" id="vysledekStrany" type="number" min="0" max="100" step="1" value="0"></div></form>'
+        cellValue = '<form onsubmit="return false"><div class="autocomplete percent"><input oninput="prepocitejProcenta()" class="vysledek" id="vysledekStrany" type="number" min="0" max="100" step="1" value="0"></div></form>'
       }
 
       if (cellValue == null) cellValue = "";
