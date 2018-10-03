@@ -4,7 +4,7 @@ published: "21. dubna 2018"
 coverimg: https://www.irozhlas.cz/sites/default/files/styles/zpravy_snowfall/public/uploader/komunalni-volby_1802_180823-084533_jab.png?itok=6XCgU6KR
 coverimg_note: ""
 styles: ["//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"]
-libraries: [jquery, "https://data.irozhlas.cz/kandidatky-tipovacka/js/jquery.csv.min.js", datatables, "https://code.jquery.com/ui/1.12.1/jquery-ui.js", "https://cdn.datatables.net/plug-ins/1.10.19/sorting/diacritics-sort.js"]
+libraries: [jquery, datatables, "https://code.jquery.com/ui/1.12.1/jquery-ui.js", "https://cdn.datatables.net/plug-ins/1.10.19/sorting/diacritics-sort.js"]
 options: [noheader, nopic] #wide, noheader (, nopic)
 ---
 
