@@ -125,10 +125,11 @@ function prepocitejProcenta() {
 
   var obec = $("#vyberObce").val().split(" (")[0];
   var vitez = nejStrana.substring(0,1) + nejStrana.substring(1).toLowerCase();
-  console.log(obec, vitez);
+  
 
   if (rozdelenoHlasu == 100) {
-    var html = '<button type="button" id="klikaci" onclick ="spocitejMandaty()">Spočítat mandáty</button></div>'
+    var html = '<button type="button" class="klikaci" onclick ="spocitejMandaty()">Spočítat mandáty</button></div>'
+    html += '<div id="sdildiv"></div>';    
   } else if (rozdelenoHlasu > 100) {
     var html = '<button type="button" id="uber">Pro rozdělení mandátů je potřeba rozdat o ' + (rozdelenoHlasu - 100) + ' % hlasů méně</button></div>'
   } else {
@@ -137,6 +138,9 @@ function prepocitejProcenta() {
 
   document.getElementById("zpetStrany").innerHTML = html;
 
+  if (rozdelenoHlasu == 100) {
+    sdilitko(obec, vitez);
+  }
 }
 
 function spocitejMandaty() {
@@ -396,21 +400,13 @@ function zpetNaKandidaty() {
 }
 
 function sdilitko(obec, vitez) {
-
-  /*
-
   // vygenerování vyhodnocení
-  var sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://www.irozhlas.cz/zpravy-domov/data-median-prokop-segmentace-volby-autoritari-liberalove_1805210740_cib"
-  var sdileciURLtw = "https://twitter.com/intent/tweet?text=Levicov%C3%BD%20nevoli%C4%8D%2C%20m%C4%9Bstsk%C3%BD%20liber%C3%A1l%20nebo%20skute%C4%8Dn%C3%BD%20k%C5%99es%C5%A5an%3F%20Test%20prozrad%C3%AD%2C%20koho%20vol%C3%ADte%3A&url=https%3A%2F%2Fwww.irozhlas.cz%2Fzpravy-domov%2Fdata-median-prokop-segmentace-volby-autoritari-liberalove_1805210740_cib"
-  var text = '<div class="vyhodnoceni">';
-  text += '<h3>Podle modelu Medianu jste</h3>';
-  for(var i = 0; i < 7; i++) {
-    text += '<div class="vyhodnoceni-skupina" style="background-color:' + barvyCudliky.bar7[i] + '">' + serazeneSegmenty[i][0] + ': ' + nicenum(serazeneSegmenty[i][1]) + ' %</div>';
-  }
-  text += '<button id="sdilitko">Sdílet</button><br>';
+  var sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://www.irozhlas.cz/zpravy-nahled/kandidatky-tipovacka";
+  var sdileciURLtw = "https://twitter.com/intent/tweet?text=Dola%C4%8Fte%20formu%20na%20volby%3A%20vyzkou%C5%A1ejte%20si%20hlasov%C3%A1n%C3%AD%20ve%20sv%C3%A9%20obci%20nane%C4%8Disto.%20Tref%C3%ADte%20spr%C3%A1vn%C3%BD%20v%C3%BDsledek%3F&url=https%3A%2F%2Fwww.irozhlas.cz%2Fzpravy-nahled%2Fkandidatky-tipovacka";
+  var text = '<button id="sdilitko">Sdílet</button>';
   text += '<button id="tweetitko">Tweetnout</button>';
 
-  $(".test").html(text);
+  $("#sdildiv").html(text);
 
   $("#sdilitko").click(function() {
     window.open(sdileciURL,'test','left=20,top=20,width=550,height=650,toolbar=0,resizable=0,menubar=0');
@@ -422,7 +418,7 @@ function sdilitko(obec, vitez) {
 
   // sdílítko - defaultní URL článku se dynamicky nahradí vygenerovanou
   $.ajax({
-    url: "https://s0zqrf2j0b.execute-api.eu-central-1.amazonaws.com/prod?arr=[" + sdileciVysledky.toString() + "]",
+    url: "https://s0zqrf2j0b.execute-api.eu-central-1.amazonaws.com/prod?obec=test&vitez=vitez",
     type: "GET",
     crossDomain: !0,
     dataType: "json",
@@ -437,5 +433,4 @@ function sdilitko(obec, vitez) {
       })
     }
   });
-  */
 }
