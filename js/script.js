@@ -6,7 +6,15 @@
 // výběr okresních měst
 // výpočet na Brně-sever: MZH 70, něco 20, něco 10, nevychází mandáty celkem
 
-d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazvyobci.csv", function(data) {
+
+$.ajax({
+  type: "GET",
+  url: "https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazvyobci.csv",
+  dataType: "text",
+  success: function(data) {hledatko($.csv.toObjects(data));}
+});
+
+function hledatko(data) {
   var nazvyObci = data.sort(function(a, b) {
     if(a.NAZEVFULL < b.NAZEVFULL) return -1;
     if(a.NAZEVFULL > b.NAZEVFULL) return 1;
@@ -17,9 +25,18 @@ d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazv
 		return d['NAZEVFULL'];
 	});
 
+  var obceHledatko = []
+  seznamObci.forEach(function(obec){obceHledatko.push([obec, obec.split(" (")[0]]);});
+
   $('#vyberObce').autocomplete({
     delay: 500,
-    source: seznamObci,
+    source: function(request, response){
+      var result = obceHledatko.filter(function(obec) {
+        //console.log(obec[1], request.term);
+        return obec[1].toLowerCase().includes(request.term.toLowerCase());
+      });
+      response(result.map(function(obec){return obec[0];}));
+    },//seznamObci,
     select: function(e) {
       document.getElementById("strany").innerHTML = 'Načítám data...'
       setTimeout(function() {
@@ -41,13 +58,17 @@ d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazv
 			ukazStrany(zvolenaObec, idObce);
 		}, 250);
 	});
-});
+};
 
 function ukazStrany(zvolenaObec, idObce) {
-	d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/" + idObce + ".csv", function(data) {
-console.log('x')
-		var strany = data;
+  $.ajax({
+    type: "GET",
+    url: "https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/" + idObce + ".csv",
+    dataType: "text",
+    success: function(data) {pokracuj($.csv.toObjects(data));}
+  });
 
+	function pokracuj(strany) {
     var idStran = strany.map(function(d) {
       return d['StranaNr'];
     });
@@ -86,7 +107,7 @@ console.log('x')
           }
       });
     });
-	});
+	};
 };
 
 function prepocitejProcenta(pocetStran) {

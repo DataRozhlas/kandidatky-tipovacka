@@ -1,15 +1,3 @@
-li {
-    background: none !important;
-}
-
-ul, ol {
-    list-style: initial !important;
-}
-
-hr {
-    max-width: none !important;
-}
-
 * { box-sizing: border-box; }
 
 body {
@@ -28,6 +16,9 @@ body {
 
 .ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
 
+.vysledek {
+  width: 300%;
+}
 input {
   border: 1px solid transparent;
   background-color: #deebf7;
