@@ -45,7 +45,7 @@ d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazv
 
 function ukazStrany(zvolenaObec, idObce) {
 	d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/" + idObce + ".csv", function(data) {
-
+console.log('x')
 		var strany = data;
 
     var idStran = strany.map(function(d) {
@@ -149,7 +149,7 @@ function spocitejMandaty(pocetStran) {
   }
 
   // snižování kvóra (bod 6)
-  for(i = 1; i <= 5; i++) {
+  for(i = 1; i < 5; i++) {
 
     var pocetStranNadPrahem = 0;
     var pocetKandidatuNadPrahem = 0;
@@ -191,20 +191,24 @@ function spocitejMandaty(pocetStran) {
   }
 
   // přidělení mandátů
-  for(k = 0; k < pocetMand; k++) {
+  var obsazeno = 0;
+  var max = 101;
+
+  while ( (obsazeno < pocetMand) & (max > 0) ) {
 
     // nalezení nejvyšší hodnoty
     var maxRow = prepocet.map(function(row) { return Math.max.apply(Math, row); });
-    var max = Math.max.apply(null, maxRow);
+    max = Math.max.apply(null, maxRow);
 
     // vymazání nejvyšší hodnoty a přidělení mandátu
     for(i = 0; i < pocetStran; i++) {
       for(j = 0; j < pocetMand; j++) {
-        if(prepocet[i][j] == max) {
+        if( (prepocet[i][j] == max) & (max > 0) ) {
           prepocet[i][j] = 0;
           max = 101;
           if(mandaty[i] < pocetKand[i]) {
             mandaty[i] = parseInt(mandaty[i]) + 1;
+            obsazeno++;
           }
         }
       }

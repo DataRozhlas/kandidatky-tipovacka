@@ -64,7 +64,8 @@ XXX
 d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazvyobci.csv",function(data){var nazvyObci=data.sort(function(a,b){if(a.NAZEVFULL<b.NAZEVFULL)return-1;if(a.NAZEVFULL>b.NAZEVFULL)return 1;return 0;});var seznamObci=nazvyObci.map(function(d){return d['NAZEVFULL'];});$('#vyberObce').autocomplete({delay:500,source:seznamObci,select:function(e){document.getElementById("strany").innerHTML='Načítám data...'
 setTimeout(function(){document.getElementById("strany").innerHTML='Načítám data...'
 var zvolenaObec=document.getElementById("vyberObce").value;var index=seznamObci.indexOf(zvolenaObec);var idObce=nazvyObci[index]['KODZASTUP'];ukazStrany(zvolenaObec,idObce);},250);}});$('#vyberObce').on('change',function(){setTimeout(function(){document.getElementById("strany").innerHTML='Načítám data...'
-var zvolenaObec=document.getElementById("vyberObce").value;var index=seznamObci.indexOf(zvolenaObec);var idObce=nazvyObci[index]['KODZASTUP'];ukazStrany(zvolenaObec,idObce);},250);});});function ukazStrany(zvolenaObec,idObce){d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/"+idObce+".csv",function(data){var strany=data;var idStran=strany.map(function(d){return d['StranaNr'];});var stranyBezId=strany.map(function(d){delete(d['StranaNr']);return(d);});for(i=0;i<stranyBezId.length;i++){stranyBezId[i]['Hlasy (%)']=0
+var zvolenaObec=document.getElementById("vyberObce").value;var index=seznamObci.indexOf(zvolenaObec);var idObce=nazvyObci[index]['KODZASTUP'];ukazStrany(zvolenaObec,idObce);},250);});});function ukazStrany(zvolenaObec,idObce){d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/"+idObce+".csv",function(data){console.log('x')
+var strany=data;var idStran=strany.map(function(d){return d['StranaNr'];});var stranyBezId=strany.map(function(d){delete(d['StranaNr']);return(d);});for(i=0;i<stranyBezId.length;i++){stranyBezId[i]['Hlasy (%)']=0
 stranyBezId[i]['Mandáty']=0;}
 var html='<h3>Kandidující strany</h3>'
 html+='<table id="tabulkaStran" class="display" style="width:100%"></table>'
@@ -77,12 +78,12 @@ function spocitejMandaty(pocetStran){var strany=[];var pocetKand=[];var pocetMan
 for(i=0;i<pocetStran;i++){pocetKand[i]=parseInt(pocetKand[i].substr(0,pocetKand[i].indexOf('/')));}
 for(i=0;i<pocetStran;i++){var pocetKandProFalesnyPrah=parseInt(pocetKand[i]);if(pocetKandProFalesnyPrah>pocetMand){pocetKandProFalesnyPrah=pocetMand;}
 falesnyPrah[i]=parseInt(procenta[i])*parseInt(pocetMand)/pocetKandProFalesnyPrah;}
-for(i=1;i<=5;i++){var pocetStranNadPrahem=0;var pocetKandidatuNadPrahem=0;for(j=0;j<pocetStran;j++){if(falesnyPrah[j]>prah){pocetStranNadPrahem++;pocetKandidatuNadPrahem=pocetKandidatuNadPrahem+pocetKand[j];}}
+for(i=1;i<5;i++){var pocetStranNadPrahem=0;var pocetKandidatuNadPrahem=0;for(j=0;j<pocetStran;j++){if(falesnyPrah[j]>prah){pocetStranNadPrahem++;pocetKandidatuNadPrahem=pocetKandidatuNadPrahem+pocetKand[j];}}
 if(pocetStranNadPrahem<2||pocetKandidatuNadPrahem<pocetMand/2||pocetKandidatuNadPrahem<5){prah--;}}
 if(pocetStran==1){prah=0;}
 for(i=0;i<pocetStran;i++){prepocet[i]=new Array(pocetMand);}
 for(i=0;i<pocetStran;i++){for(j=1;j<pocetMand+1;j++){if(falesnyPrah[i]>prah){prepocet[i][j-1]=procenta[i]*pocetKand[i]/j;}else{prepocet[i][j-1]=0;}}}
-for(k=0;k<pocetMand;k++){var maxRow=prepocet.map(function(row){return Math.max.apply(Math,row);});var max=Math.max.apply(null,maxRow);for(i=0;i<pocetStran;i++){for(j=0;j<pocetMand;j++){if(prepocet[i][j]==max){prepocet[i][j]=0;max=101;if(mandaty[i]<pocetKand[i]){mandaty[i]=parseInt(mandaty[i])+1;}}}}}
+var obsazeno=0;var max=101;while((obsazeno<pocetMand)&(max>0)){var maxRow=prepocet.map(function(row){return Math.max.apply(Math,row);});max=Math.max.apply(null,maxRow);for(i=0;i<pocetStran;i++){for(j=0;j<pocetMand;j++){if((prepocet[i][j]==max)&(max>0)){prepocet[i][j]=0;max=101;if(mandaty[i]<pocetKand[i]){mandaty[i]=parseInt(mandaty[i])+1;obsazeno++;}}}}}
 for(i=0;i<pocetStran;i++){document.getElementsByClassName("mandaty")[i].textContent=mandaty[i];}}
 function poskladejTabulkuStran(seznamStran,idStran,idObce){var columns=poskladejHlavickuStran(seznamStran);$('#tabulkaStran').append('<tbody>');for(var i=0;i<seznamStran.length;i++){var row$=$('<tr/>');for(var colIndex=0;colIndex<columns.length;colIndex++){var cellValue=seznamStran[i][columns[colIndex]];var nazevStrany='\''+seznamStran[i]['Strana']+'\'';if(colIndex==0){cellValue='<div class="nazevStrany">'+cellValue+'</div>';}
 if(colIndex==1){cellValue='<div class="pocetKand">'+cellValue+'</div>';}
