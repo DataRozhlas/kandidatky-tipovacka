@@ -1,11 +1,5 @@
 // JS soubory ve složce /styles/ se do výsledného článku zakompilují automaticky
 
-// přepočet mandátů podle: https://www.czso.cz/documents/10180/20536900/mandaty.pdf/efc81993-c19e-4fd1-9ce1-2f1dfbeae465?version=1.0
-
-// při kliknutí do počtu hlasů se znovu načítá
-// výběr okresních měst
-// výpočet na Brně-sever: MZH 70, něco 20, něco 10, nevychází mandáty celkem
-
 d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazvyobci.csv", function(data) {
   var nazvyObci = data.sort(function(a, b) {
     if(a.NAZEVFULL < b.NAZEVFULL) return -1;
@@ -45,7 +39,7 @@ d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazv
 
 function ukazStrany(zvolenaObec, idObce) {
 	d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/" + idObce + ".csv", function(data) {
-console.log('x')
+
 		var strany = data;
 
     var idStran = strany.map(function(d) {
@@ -68,7 +62,9 @@ console.log('x')
 
     document.getElementById("strany").innerHTML = html;
 
-		poskladejTabulkuStran(stranyBezId, idStran, idObce);
+    poskladejTabulkuStran(stranyBezId, idStran, idObce);
+
+    document.getElementById("obec").style["padding-bottom"] = "30px";
 
     $(function() {
       $('#tabulkaStran').DataTable({
@@ -219,6 +215,16 @@ function spocitejMandaty(pocetStran) {
     document.getElementsByClassName("mandaty")[i].textContent = mandaty[i];
   }
 
+  nakresliGraf(strany, procenta, mandaty);
+
+  document.getElementById("strany").style["padding-bottom"] = "30px";
+
+  document.getElementById("zpetStrany").scrollIntoView();
+
+  var html = '<button type="button" onclick="zpetNaKandidaty()">Zpět na kandidátky ↑</button>'
+
+  document.getElementById("zpet").innerHTML = html;
+
 }
 
 function poskladejTabulkuStran(seznamStran, idStran, idObce) {
@@ -285,3 +291,64 @@ function poskladejHlavickuStran(seznamStran) {
   return columnSet;
 
 };
+
+function nakresliGraf(strany, procenta, mandaty) {
+
+  var mandatyCelkem = mandaty.reduce(function(a, b) { return a + b; }, 0);
+
+  for(i = 0; i < mandaty.length; i++) {
+    mandaty[i] = Math.round(100 * mandaty[i] / mandatyCelkem, 1);
+  }
+
+  document.getElementById("vysledek").style["height"] = "600px";
+
+  var colors = ['#deebf7', '#2171b5']
+
+  var chart = Highcharts.chart('vysledek', {
+
+      chart: {
+          type: 'column'
+      },
+      title: {
+          text: 'Zisk hlasů vs. mandátů'
+      },
+      xAxis: {
+          categories: strany
+      },
+      yAxis: {
+          title: {
+              text: 'Zisk hlasů vs. mandátů'
+          },
+          labels: {
+              format: '{value} %'
+          }
+      },
+      tooltip: {
+          pointFormat: '{point.series.name}: <b>{point.y} %<br/>',
+          shared: true
+      },
+      exporting: {
+          enabled: false
+      },
+      credits: {
+          href: '',
+          text: ''
+      },
+      series: [{
+          name: 'Hlasy',
+          data: procenta,
+          color: colors[0]
+      }, {
+          name: 'Mandáty',
+          data: mandaty,
+          color: colors[1]
+      }]
+  });
+
+}
+
+function zpetNaKandidaty() {
+
+  document.getElementById("strany").scrollIntoView();
+
+}

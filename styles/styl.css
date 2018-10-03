@@ -83,10 +83,6 @@ input[type=submit] {
   color: #ffffff;
 }
 
-#obec, #strany {
-  padding-bottom: 30px;
-}
-
 .stranaKlik {
   cursor: pointer;
   color: #08519c;
@@ -128,16 +124,20 @@ button {
   width: 20px;
 }
 
+.vysledek {
+  padding: 15px;
+}
+
 #uber {
-  background-color: #99000d;
+  background-color: #7f0000;
 }
 
 #unter {
-  background-color: #ef3b2c;
+  background-color: #b30000;
 }
 
 #klikaci {
-  background-color: #008000;
+  background-color: #006d2c;
 }
 
 .mandaty {
