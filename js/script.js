@@ -1,6 +1,13 @@
 // JS soubory ve složce /styles/ se do výsledného článku zakompilují automaticky
 
-d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazvyobci.csv", function(data) {
+$.ajax({
+  type: "GET",
+  url: "https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazvyobci.csv",
+  dataType: "text",
+  success: function(data) {hledatko($.csv.toObjects(data));}
+});
+
+function hledatko(data) {
   var nazvyObci = data.sort(function(a, b) {
     if(a.NAZEVFULL < b.NAZEVFULL) return -1;
     if(a.NAZEVFULL > b.NAZEVFULL) return 1;
@@ -11,9 +18,17 @@ d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazv
 		return d['NAZEVFULL'];
 	});
 
+  var obceHledatko = []
+  seznamObci.forEach(function(obec){obceHledatko.push([obec, obec.split(" (")[0]]);});
+
   $('#vyberObce').autocomplete({
     delay: 500,
-    source: seznamObci,
+    source: function(request, response){
+      var result = obceHledatko.filter(function(obec) {
+        return obec[1].toLowerCase().includes(request.term.toLowerCase());
+      });
+      response(result.map(function(obec){return obec[0];}));
+    },
     select: function(e) {
       document.getElementById("strany").innerHTML = 'Načítám data...'
       setTimeout(function() {
@@ -35,13 +50,18 @@ d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/app/obce/nazv
 			ukazStrany(zvolenaObec, idObce);
 		}, 250);
 	});
-});
+};
 
 function ukazStrany(zvolenaObec, idObce) {
-	d3.csv("https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/" + idObce + ".csv", function(data) {
 
-		var strany = data;
+  $.ajax({
+    type: "GET",
+    url: "https://data.irozhlas.cz/volby-obecni-2018/data/kandidatky/tip/" + idObce + ".csv",
+    dataType: "text",
+    success: function(data) {pokracuj($.csv.toObjects(data));}
+  });
 
+	function pokracuj(strany) {
     var idStran = strany.map(function(d) {
       return d['StranaNr'];
     });
@@ -73,7 +93,12 @@ function ukazStrany(zvolenaObec, idObce) {
             { targets: [3, 4], orderable: false}
           ],
           "order": [[ 0, "asc" ]],
-          "responsive": true,
+          responsive: {
+              details: {
+                  display: $.fn.dataTable.Responsive.display.childRowImmediate,
+                  type: ''
+              }
+          },
           "ordering": true,
           "paging": false,
           "bInfo": false,
@@ -82,25 +107,22 @@ function ukazStrany(zvolenaObec, idObce) {
           }
       });
     });
-	});
+	};
 };
 
-function prepocitejProcenta(pocetStran) {
-
+function prepocitejProcenta() {
   var rozdelenoHlasu = 0;
 
-  for(i = 0; i < pocetStran; i++) {
-
-    var vysledek = parseInt(document.getElementsByClassName("vysledek")[i].value);
+  $(".vysledek").each(function() {
+    var vysledek = parseInt(this.value);
     if (isNaN(vysledek)) {
       vysledek = 0;
     }
     rozdelenoHlasu = rozdelenoHlasu + vysledek;
-
-  }
+  })
 
   if (rozdelenoHlasu == 100) {
-    var html = '<button type="button" id="klikaci" onclick ="spocitejMandaty(' + pocetStran + ')">Spočítat mandáty</button></div>'
+    var html = '<button type="button" id="klikaci" onclick ="spocitejMandaty()">Spočítat mandáty</button></div>'
   } else if (rozdelenoHlasu > 100) {
     var html = '<button type="button" id="uber">Pro rozdělení mandátů je potřeba rozdat o ' + (rozdelenoHlasu - 100) + ' % hlasů méně</button></div>'
   } else {
@@ -111,8 +133,8 @@ function prepocitejProcenta(pocetStran) {
 
 }
 
-function spocitejMandaty(pocetStran) {
-
+function spocitejMandaty() {
+  var pocetStran = $(".nazevStrany").length
   var strany = [];
   var pocetKand = [];
   var pocetMand;
@@ -121,17 +143,23 @@ function spocitejMandaty(pocetStran) {
   var prah = 5;
   var prepocet = new Array(pocetStran);
   var mandaty = [];
+  var mobil = false;
 
   // vstupy pro výpočet
-  for(i = 0; i < pocetStran; i++) {
-    strany.push(document.getElementsByClassName("nazevStrany")[i].textContent);
-    pocetKand.push(document.getElementsByClassName("pocetKand")[i].textContent);
-    pocetMand = parseInt(pocetKand[0].substr(pocetKand[0].indexOf('/') + 1, pocetKand[0].length + 1));
-    procenta.push(parseInt(document.getElementsByClassName("vysledek")[i].value));
-    mandaty.push(0);
+  $(".nazevStrany").each(function(){strany.push($(this).text())})
+  $(".pocetKand").each(function(){pocetKand.push($(this).text())});
+
+  pocetMand = parseInt(pocetKand[0].substr(pocetKand[0].indexOf('/') + 1, pocetKand[0].length + 1));
+  $(".vysledek").each(function(){procenta.push($(this).val())});
+
+  // mobilní hack pt. 1
+  if (procenta.length === pocetStran*2) {
+    mobil = true;
+    procenta = procenta.filter(function(procento, index) {return index % 2});
   }
 
   for(i = 0; i < pocetStran; i++) {
+    mandaty.push(0);
     pocetKand[i] = parseInt(pocetKand[i].substr(0, pocetKand[i].indexOf('/')));
   }
 
@@ -211,8 +239,15 @@ function spocitejMandaty(pocetStran) {
     }
   }
 
-  for(i = 0; i < pocetStran; i++) {
-    document.getElementsByClassName("mandaty")[i].textContent = mandaty[i];
+  // mobilni hack pt. 2
+  if (!mobil) {
+    for(i = 0; i < pocetStran; i++) {
+      document.getElementsByClassName("mandaty")[i].textContent = mandaty[i];
+    }
+  } else {
+        for(i = 0; i < pocetStran; i++) {
+        document.getElementsByClassName("mandaty")[(i*2)+1].textContent = mandaty[i];
+    }
   }
 
   nakresliGraf(strany, procenta, mandaty);
@@ -252,7 +287,7 @@ function poskladejTabulkuStran(seznamStran, idStran, idObce) {
       }
 
       if (colIndex == columns.length - 2) {
-        cellValue = '<form onsubmit="return false"><div class="autocomplete" id="percent"><input oninput="prepocitejProcenta(' + seznamStran.length + ')" class="vysledek" id="vysledekStrany" type="number" min="0" max="100" step="1" value="0"></div></form>'
+        cellValue = '<form onsubmit="return false"><div class="autocomplete percent"><input oninput="prepocitejProcenta()" class="vysledek" id="vysledekStrany" type="number" min="0" max="100" step="1" value="0"></div></form>'
       }
 
       if (cellValue == null) cellValue = "";
@@ -298,6 +333,7 @@ function nakresliGraf(strany, procenta, mandaty) {
 
   for(i = 0; i < mandaty.length; i++) {
     mandaty[i] = Math.round(100 * mandaty[i] / mandatyCelkem, 1);
+    procenta[i] = parseInt(procenta[i])
   }
 
   document.getElementById("vysledek").style["height"] = "600px";
