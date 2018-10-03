@@ -40,16 +40,6 @@ function hledatko(data) {
       }, 250);
     }
   });
-
-	$('#vyberObce').on('change', function () {
-		setTimeout(function() {
-      document.getElementById("strany").innerHTML = 'Načítám data...'
-			var zvolenaObec = document.getElementById("vyberObce").value;
-			var index = seznamObci.indexOf(zvolenaObec);
-			var idObce = nazvyObci[index]['KODZASTUP'];
-			ukazStrany(zvolenaObec, idObce);
-		}, 250);
-	});
 };
 
 function ukazStrany(zvolenaObec, idObce) {
@@ -112,14 +102,30 @@ function ukazStrany(zvolenaObec, idObce) {
 
 function prepocitejProcenta() {
   var rozdelenoHlasu = 0;
+  var nejvyssi = 0;
+  var curID = 0;
+  var nejStrana;
 
   $(".vysledek").each(function() {
     var vysledek = parseInt(this.value);
+    curID++;
     if (isNaN(vysledek)) {
       vysledek = 0;
     }
+    if (vysledek > nejvyssi) {
+      nejvyssi = vysledek;
+      if ($(window).width() < 560) {
+        nejStrana = $(this).parent().parent().parent().parent().parent().parent().parent().prev().find(".nazevStrany")[0].textContent;
+      } else {
+        nejStrana = $(this).parent().parent().parent().parent().children()[0].textContent;
+      }
+    }
     rozdelenoHlasu = rozdelenoHlasu + vysledek;
   })
+
+  var obec = $("#vyberObce").val().split(" (")[0];
+  var vitez = nejStrana.substring(0,1) + nejStrana.substring(1).toLowerCase();
+  console.log(obec, vitez);
 
   if (rozdelenoHlasu == 100) {
     var html = '<button type="button" id="klikaci" onclick ="spocitejMandaty()">Spočítat mandáty</button></div>'
@@ -245,7 +251,7 @@ function spocitejMandaty() {
       document.getElementsByClassName("mandaty")[i].textContent = mandaty[i];
     }
   } else {
-        for(i = 0; i < pocetStran; i++) {
+    for(i = 0; i < pocetStran; i++) {
         document.getElementsByClassName("mandaty")[(i*2)+1].textContent = mandaty[i];
     }
   }
@@ -387,4 +393,49 @@ function zpetNaKandidaty() {
 
   document.getElementById("strany").scrollIntoView();
 
+}
+
+function sdilitko(obec, vitez) {
+
+  /*
+
+  // vygenerování vyhodnocení
+  var sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://www.irozhlas.cz/zpravy-domov/data-median-prokop-segmentace-volby-autoritari-liberalove_1805210740_cib"
+  var sdileciURLtw = "https://twitter.com/intent/tweet?text=Levicov%C3%BD%20nevoli%C4%8D%2C%20m%C4%9Bstsk%C3%BD%20liber%C3%A1l%20nebo%20skute%C4%8Dn%C3%BD%20k%C5%99es%C5%A5an%3F%20Test%20prozrad%C3%AD%2C%20koho%20vol%C3%ADte%3A&url=https%3A%2F%2Fwww.irozhlas.cz%2Fzpravy-domov%2Fdata-median-prokop-segmentace-volby-autoritari-liberalove_1805210740_cib"
+  var text = '<div class="vyhodnoceni">';
+  text += '<h3>Podle modelu Medianu jste</h3>';
+  for(var i = 0; i < 7; i++) {
+    text += '<div class="vyhodnoceni-skupina" style="background-color:' + barvyCudliky.bar7[i] + '">' + serazeneSegmenty[i][0] + ': ' + nicenum(serazeneSegmenty[i][1]) + ' %</div>';
+  }
+  text += '<button id="sdilitko">Sdílet</button><br>';
+  text += '<button id="tweetitko">Tweetnout</button>';
+
+  $(".test").html(text);
+
+  $("#sdilitko").click(function() {
+    window.open(sdileciURL,'test','left=20,top=20,width=550,height=650,toolbar=0,resizable=0,menubar=0');
+  });
+
+  $("#tweetitko").click(function() {
+    window.open(sdileciURLtw,'test','left=20,top=20,width=550,height=250,toolbar=0,resizable=0,menubar=0');
+  });
+
+  // sdílítko - defaultní URL článku se dynamicky nahradí vygenerovanou
+  $.ajax({
+    url: "https://s0zqrf2j0b.execute-api.eu-central-1.amazonaws.com/prod?arr=[" + sdileciVysledky.toString() + "]",
+    type: "GET",
+    crossDomain: !0,
+    dataType: "json",
+    success: function (response) {
+      sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://dev.datarozhlas.cz/profil-volice/share/" + response + ".html";
+      sdileciURLtw = "https://twitter.com/intent/tweet?text=Levicov%C3%BD%20nevoli%C4%8D%2C%20m%C4%9Bstsk%C3%BD%20liber%C3%A1l%20nebo%20skute%C4%8Dn%C3%BD%20k%C5%99es%C5%A5an%3F%20Test%20prozrad%C3%AD%2C%20koho%20vol%C3%ADte%3A&url=https%3A%2F%2Fdev.datarozhlas.cz%2Fprofil-volice%2Fshare%2F" + response + ".html";
+      $("#sdilitko").click(function() {
+        window.open(sdileciURL,'test','left=20,top=20,width=550,height=650,toolbar=0,resizable=0,menubar=0');
+      });
+      $("tweetitko").click(function() {
+        window.open(sdileciURLtw,'test','left=20,top=20,width=550,height=250,toolbar=0,resizable=0,menubar=0');
+      })
+    }
+  });
+  */
 }
