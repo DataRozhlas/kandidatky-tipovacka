@@ -117,8 +117,7 @@ button {
 
 .vysledek {
   padding: 15px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
+  border-radius: 5px;
 }
 
 #uber {
@@ -141,6 +140,5 @@ button {
   text-align: center;
   text-decoration: none;
   font: 16px "Noticia Text",serif;
-  border-radius: 5px;
   border-radius: 5px;
 }
