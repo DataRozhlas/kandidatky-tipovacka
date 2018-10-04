@@ -427,7 +427,7 @@ function sdilitko(obec, vitez) {
     dataType: "json",
     success: function (response) {
       sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://dev.datarozhlas.cz/kandidatky-tipovacka/share/" + response + ".html";
-      sdileciURLtw = "https://twitter.com/intent/tweet?text=Levicov%C3%BD%20nevoli%C4%8D%2C%20m%C4%9Bstsk%C3%BD%20liber%C3%A1l%20nebo%20skute%C4%8Dn%C3%BD%20k%C5%99es%C5%A5an%3F%20Test%20prozrad%C3%AD%2C%20koho%20vol%C3%ADte%3A&url=https%3A%2F%2Fdev.datarozhlas.cz%2Fkandidatky-tipovacka%2Fshare%2F" + response + ".html";
+      sdileciURLtw = 'https://twitter.com/intent/tweet?text=' + encodeURI('V obci ' + obec + ' podle mě zvítězí ' + vitez + '! Zkuste si také tipnout, jak dopadnou komunální volby ve Vaší obci.') + '&url=https%3A%2F%2Fdev.datarozhlas.cz%2Fkandidatky-tipovacka%2Fshare%2F' + response + '.html';
       $("#sdilitko").click(function() {
         window.open(sdileciURL,'test','left=20,top=20,width=550,height=650,toolbar=0,resizable=0,menubar=0');
       });
