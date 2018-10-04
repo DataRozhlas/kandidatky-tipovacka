@@ -1,11 +1,11 @@
 title: "Dolaďte formu na volby: vyzkoušejte si hlasování ve své obci nanečisto. Trefíte správný výsledek?"
 perex: "V simulátoru od datových novinářů Českého rozhlasu si můžete vyzkoušet, jak se volba projeví na zisku křesel. Poradíme taky, jak na křížkování kandidátů."
-published: "21. dubna 2018"
-coverimg: https://www.irozhlas.cz/sites/default/files/styles/zpravy_snowfall/public/uploader/komunalni-volby_1802_180823-084533_jab.png?itok=6XCgU6KR
-coverimg_note: ""
+published: "4. října 2018"
+coverimg: https://www.irozhlas.cz/sites/default/files/styles/zpravy_snowfall/public/uploader/volby2_181003-225854_miz.png?itok=ms9Xmckr
+coverimg_note: "Volby. Foto Martin Pařízek, ČRo."
 styles: ["//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"]
 libraries: [jquery, datatables, "https://code.jquery.com/ui/1.12.1/jquery-ui.js", "https://cdn.datatables.net/plug-ins/1.10.19/sorting/diacritics-sort.js", highcharts]
-options: [noheader, nopic] #wide, noheader (, nopic)
+options: [] #wide, noheader (, nopic)
 ---
 
 Obecní volby jsou podle politologů v Česku ty vůbec nejsložitější. Jedním z důvodů je množství stran, hnutí a nezávislých kandidátů, kteří se obci od obce liší. Obyvatelé měst navíc volí dvakrát: kromě magistrátu také na radnici městské části. Proto nejprve přinášíme přehled, kdo kandiduje zrovna u vás.
@@ -54,6 +54,3 @@ Každý volič tak může dát hlas jedné kandidátní listině a konkrétním 
 Pokud má ovšem kandidát přeskočit lépe postavené kolegy, musí získat o deset procent hlasů víc, než je průměrný počet hlasů na kandidáta ze stejné listiny. To je hlavně ve velkých městech poměrně obtížné. Situace, kdy se přepočet chová zrádně, ukazují na příkladu [politologové Otto Eibl a Miloš Gregor](http://polit.fss.muni.cz/volebni-system-ktery-neni-takovy-jaky-se-zda/) nebo [Deník veřejné správy](http://www.dvs.cz/clanek.asp?id=6670736).
 
 Detailní popis volebního systému do obecních zastupitelstev včetně výjimek [najdete na webu ČSÚ](https://www.czso.cz/documents/10180/20536900/mandaty.pdf/efc81993-c19e-4fd1-9ce1-2f1dfbeae465?version=1.0).
-
-
-

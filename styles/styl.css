@@ -107,10 +107,6 @@ button {
   color: white;
 }
 
-#zpetStrany {
-  margin-top: 20px;
-}
-
 .percent {
   width: 20px;
 }
@@ -128,8 +124,39 @@ button {
   background-color: #b30000;
 }
 
-#klikaci {
+.klikaci {
   background-color: #006d2c;
+}
+
+#zpetStrany {
+  margin-top: 20px;
+}
+
+#sdildiv, #zpetStrany {
+  display: inline-block;
+}
+
+#sdilitko, #tweetitko {
+  margin-left: 20px;
+}
+
+#sdilitko {
+  background-color: #2F599D;
+}
+
+#twititko {
+  background-color: #009DD7;
+}
+
+@media only screen and (max-width: 560px) {
+  #sdilitko, #tweetitko {
+    margin-left: initial;
+    margin-top: 10px;
+  }
+
+  #tweetitko {
+    margin-left: 10px;
+  }
 }
 
 .mandaty {
