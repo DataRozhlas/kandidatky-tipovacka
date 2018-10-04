@@ -418,9 +418,12 @@ function sdilitko(obec, vitez) {
 
   // sdílítko - defaultní URL článku se dynamicky nahradí vygenerovanou
   $.ajax({
-    url: 'https://nz6ctn80pc.execute-api.eu-central-1.amazonaws.com/prod?vals=' + JSON.stringify({ "obec": obec, "vitez": vitez}),
+    url: encodeURI('https://nz6ctn80pc.execute-api.eu-central-1.amazonaws.com/prod?vals=' + JSON.stringify({ "obec": obec, "vitez": vitez})),
     type: "GET",
     crossDomain: !0,
+    headers: {
+      'Content-Type': 'application/json'
+    },
     dataType: "json",
     success: function (response) {
       sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://dev.datarozhlas.cz/kandidatky-tipovacka/share/" + response + ".html";
