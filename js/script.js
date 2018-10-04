@@ -418,7 +418,9 @@ function sdilitko(obec, vitez) {
 
   // sdílítko - defaultní URL článku se dynamicky nahradí vygenerovanou
   $.ajax({
-    url: encodeURI('https://nz6ctn80pc.execute-api.eu-central-1.amazonaws.com/prod?vals=' + JSON.stringify({ "obec": obec, "vitez": vitez})),
+    url: encodeURI('https://nz6ctn80pc.execute-api.eu-central-1.amazonaws.com/prod?vals=' + JSON.stringify({ 
+      "obec": obec, "vitez": vitez
+    })),
     type: "GET",
     crossDomain: !0,
     headers: {
@@ -426,8 +428,8 @@ function sdilitko(obec, vitez) {
     },
     dataType: "json",
     success: function (response) {
-      sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://dev.datarozhlas.cz/kandidatky-tipovacka/share/" + response + ".html";
-      sdileciURLtw = 'https://twitter.com/intent/tweet?text=' + encodeURI('V obci ' + obec + ' podle mě zvítězí ' + vitez + '! Zkuste si také tipnout, jak dopadnou komunální volby ve Vaší obci.') + '&url=https%3A%2F%2Fdev.datarozhlas.cz%2Fkandidatky-tipovacka%2Fshare%2F' + response + '.html';
+      sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://data.irozhlas.cz/kandidatky-tipovacka/share/" + response + ".html";
+      sdileciURLtw = 'https://twitter.com/intent/tweet?url=https://data.irozhlas.cz/kandidatky-tipovacka/share/' + response + '.html&text=' + encodeURI('V obci ' + obec + ' podle mě zvítězí ' + vitez + '! Zkuste si také tipnout, jak dopadnou komunální volby ve Vaší obci.');
       $("#sdilitko").click(function() {
         window.open(sdileciURL,'test','left=20,top=20,width=550,height=650,toolbar=0,resizable=0,menubar=0');
       });
