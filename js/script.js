@@ -418,13 +418,18 @@ function sdilitko(obec, vitez) {
 
   // sdílítko - defaultní URL článku se dynamicky nahradí vygenerovanou
   $.ajax({
-    url: "https://s0zqrf2j0b.execute-api.eu-central-1.amazonaws.com/prod?obec=test&vitez=vitez",
+    url: encodeURI('https://nz6ctn80pc.execute-api.eu-central-1.amazonaws.com/prod?vals=' + JSON.stringify({ 
+      "obec": obec, "vitez": vitez
+    })),
     type: "GET",
     crossDomain: !0,
+    headers: {
+      'Content-Type': 'application/json'
+    },
     dataType: "json",
     success: function (response) {
-      sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://dev.datarozhlas.cz/profil-volice/share/" + response + ".html";
-      sdileciURLtw = "https://twitter.com/intent/tweet?text=Levicov%C3%BD%20nevoli%C4%8D%2C%20m%C4%9Bstsk%C3%BD%20liber%C3%A1l%20nebo%20skute%C4%8Dn%C3%BD%20k%C5%99es%C5%A5an%3F%20Test%20prozrad%C3%AD%2C%20koho%20vol%C3%ADte%3A&url=https%3A%2F%2Fdev.datarozhlas.cz%2Fprofil-volice%2Fshare%2F" + response + ".html";
+      sdileciURL = "https://www.facebook.com/sharer/sharer.php?u=https://data.irozhlas.cz/kandidatky-tipovacka/share/" + response + ".html";
+      sdileciURLtw = 'https://twitter.com/intent/tweet?url=https://data.irozhlas.cz/kandidatky-tipovacka/share/' + response + '.html&text=' + encodeURI('V obci ' + obec + ' podle mě zvítězí ' + vitez + '! Zkuste si také tipnout, jak dopadnou komunální volby ve Vaší obci.');
       $("#sdilitko").click(function() {
         window.open(sdileciURL,'test','left=20,top=20,width=550,height=650,toolbar=0,resizable=0,menubar=0');
       });
